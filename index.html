@@ -993,6 +993,13 @@ function fbOpenLightbox(src, alt) {
 document.addEventListener('click', function (e) {
   var el = e.target;
   if (el.closest && el.closest('#fb-lightbox')) return;
+  // External CTA links (Telegram) are framework-generated: force them into a new tab.
+  var a = el.closest && el.closest('a[href]');
+  if (a && /^https?:/.test(a.href) && a.host !== location.host) {
+    a.target = '_blank';
+    a.rel = 'noopener';
+    return;
+  }
   while (el && el !== document.documentElement) {
     if (el.querySelector) {
       var v = el.querySelector(':scope > video[id^="fb-vr"]');
