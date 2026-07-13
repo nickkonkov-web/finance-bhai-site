@@ -704,7 +704,7 @@
 
     <!-- proof wall: video reviews + result screenshots -->
     <div style="display:grid; gap:14px; margin-top:28px; grid-template-columns:repeat(auto-fit,minmax(172px,1fr));">
-      <div onclick="fbPlayReview(this,'fb-vr1')" style="cursor:pointer; position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:linear-gradient(160deg,#243156,#0F1830); border:1px solid rgba(237,235,227,.18); display:flex; align-items:center; justify-content:center; box-shadow:0 34px 66px -34px rgba(0,0,0,.85);">
+      <div style="cursor:pointer; position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:linear-gradient(160deg,#243156,#0F1830); border:1px solid rgba(237,235,227,.18); display:flex; align-items:center; justify-content:center; box-shadow:0 34px 66px -34px rgba(0,0,0,.85);">
         <video id="fb-vr1" src="reviews/video-review-1.mp4" poster="reviews/video-poster-1.jpg" preload="none" playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
         <div class="fb-vr-overlay" style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(13,21,38,.30),rgba(13,21,38,.48) 52%,rgba(13,21,38,.92));"></div>
         <span class="fb-vr-overlay" style="position:absolute; top:12px; left:12px; z-index:2; display:flex; align-items:center; gap:6px; background:rgba(13,21,38,.55); backdrop-filter:blur(6px); color:#F3F1E9; font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:5px 10px; border-radius:999px;"><span style="width:6px; height:6px; border-radius:50%; background:#C1544A;"></span>Video review</span>
@@ -718,7 +718,7 @@
           <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(243,241,233,.7);">Mumbai · VIP member</div>
         </div>
       </div>
-      <div onclick="fbPlayReview(this,'fb-vr2')" style="cursor:pointer; position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:linear-gradient(160deg,#243156,#0F1830); border:1px solid rgba(237,235,227,.18); display:flex; align-items:center; justify-content:center; box-shadow:0 34px 66px -34px rgba(0,0,0,.85);">
+      <div style="cursor:pointer; position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:linear-gradient(160deg,#243156,#0F1830); border:1px solid rgba(237,235,227,.18); display:flex; align-items:center; justify-content:center; box-shadow:0 34px 66px -34px rgba(0,0,0,.85);">
         <video id="fb-vr2" src="reviews/video-review-2.mp4" poster="reviews/video-poster-2.jpg" preload="none" playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
         <div class="fb-vr-overlay" style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(13,21,38,.30),rgba(13,21,38,.48) 52%,rgba(13,21,38,.92));"></div>
         <span class="fb-vr-overlay" style="position:absolute; top:12px; left:12px; z-index:2; display:flex; align-items:center; gap:6px; background:rgba(13,21,38,.55); backdrop-filter:blur(6px); color:#F3F1E9; font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:5px 10px; border-radius:999px;"><span style="width:6px; height:6px; border-radius:50%; background:#C1544A;"></span>Video review</span>
@@ -959,15 +959,29 @@ class Component extends DCLogic {
 
 
 <script>
-function fbPlayReview(tile, id) {
-  var v = document.getElementById(id);
+function fbPlayReview(tile, v) {
+  if (typeof v === 'string') v = document.getElementById(v);
   if (!v) return;
   tile.querySelectorAll('.fb-vr-overlay').forEach(function (o) { o.style.display = 'none'; });
   v.controls = true;
   v.style.zIndex = 3;
   v.play();
   tile.style.cursor = 'default';
-  tile.onclick = null;
 }
+// The page framework re-renders the DOM and strips inline onclick attributes,
+// so bind by delegation and locate tiles through their video elements.
+document.addEventListener('click', function (e) {
+  var el = e.target;
+  while (el && el !== document.documentElement) {
+    if (el.querySelector) {
+      var v = el.querySelector(':scope > video[id^="fb-vr"]');
+      if (v) {
+        if (!v.controls) fbPlayReview(el, v);
+        return;
+      }
+    }
+    el = el.parentElement;
+  }
+});
 </script>
 </body></html>
