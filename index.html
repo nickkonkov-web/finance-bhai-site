@@ -1067,12 +1067,15 @@ function fbOpenLeadForm() {
     m.querySelector('#fb-leadform-el').addEventListener('submit', fbSubmitLead);
   }
   m.style.display = 'flex';
+  var ph = m.querySelector('input[name="phone"]');
+  if (ph && !ph.value) ph.value = '+91 ';
   var first = m.querySelector('input[name="first_name"]');
   if (first) first.focus();
 }
 function fbLeadInput(name, label, type) {
+  var extra = name === 'phone' ? ' placeholder="+91 98765 43210" inputmode="tel"' : '';
   return '<label style="display:grid; gap:5px; font-size:12px; letter-spacing:.02em; color:rgba(243,241,233,.6); text-align:left;">' + label +
-    '<input name="' + name + '" type="' + type + '" required style="font-size:15px; padding:12px 14px; border-radius:12px; border:1px solid rgba(237,235,227,.18); background:#0D1526; color:#F3F1E9; outline:none; width:100%; box-sizing:border-box;"></label>';
+    '<input name="' + name + '" type="' + type + '" required' + extra + ' style="font-size:15px; padding:12px 14px; border-radius:12px; border:1px solid rgba(237,235,227,.18); background:#0D1526; color:#F3F1E9; outline:none; width:100%; box-sizing:border-box;"></label>';
 }
 function fbSubmitLead(ev) {
   ev.preventDefault();
@@ -1082,10 +1085,17 @@ function fbSubmitLead(ev) {
   var d = {};
   ['first_name', 'last_name', 'email', 'phone'].forEach(function (n) { d[n] = (form.querySelector('[name="' + n + '"]').value || '').trim(); });
   var problems = [];
-  if (!d.first_name || !d.last_name) problems.push('Please enter your first and last name.');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) problems.push('Please enter a valid email.');
-  if (!/^\+?[0-9\s()-]{7,17}$/.test(d.phone)) problems.push('Please enter a valid phone number.');
+  // Names: at least 2 letters (Latin or Devanagari), no digits-only junk.
+  var nameOk = function (s) { return /^[A-Za-zऀ-ॿ][A-Za-zऀ-ॿ\s'.-]{1,39}$/.test(s) && /[A-Za-zऀ-ॿ]{2}/.test(s); };
+  if (!nameOk(d.first_name)) problems.push('Please enter your real first name.');
+  if (!nameOk(d.last_name)) problems.push('Please enter your real last name.');
+  // Email: proper local@domain.tld with an alphabetic TLD — rejects "22222", "aaaa", "a@b.c1".
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(d.email)) problems.push('Please enter a valid email address.');
+  // Phone: must include country code (+) and 8-15 digits total.
+  var phoneDigits = d.phone.replace(/[\s()-]/g, '');
+  if (!/^\+\d{8,15}$/.test(phoneDigits)) problems.push('Please enter a valid phone number with country code (e.g. +91…).');
   if (problems.length) { err.style.display = 'block'; err.textContent = problems.join(' '); return; }
+  d.phone = phoneDigits;
   err.style.display = 'none';
   btn.disabled = true;
   btn.textContent = 'Sending…';
