@@ -1037,7 +1037,7 @@ function fbOpenLightbox(src, alt) {
 }
 // Lead application form: opened by every Telegram CTA. Submissions go to Web3Forms,
 // then the visitor is redirected to thanks.html (where the Lead pixel fires).
-var FB_W3F_KEY = 'REPLACE_WITH_WEB3FORMS_KEY';
+var FB_W3F_KEY = '1a2c34f1-9243-41f5-ad83-d30cb22fd73e';
 var FB_TG_URL = 'https://t.me/financebhaitradealertsbot';
 function fbOpenLeadForm() {
   var m = document.getElementById('fb-leadform');
@@ -1108,6 +1108,7 @@ function fbSubmitLead(ev) {
       access_key: FB_W3F_KEY,
       subject: 'New Finance Bhai application',
       from_name: 'financebhai.net',
+      cc: ['nick.konkov@musteragency.com', 'aleksei.zenishin@infinox.com'],
       first_name: d.first_name, last_name: d.last_name, email: d.email, phone: d.phone
     })
   }).then(function (r) { return r.json(); }).then(function (res) {
