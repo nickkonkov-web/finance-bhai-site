@@ -616,7 +616,7 @@
         </div>
       </div>
       <!-- floating signal chip -->
-      <div style="position:absolute; right:-8px; bottom:-28px; z-index:3; background:linear-gradient(180deg,#1B2747,#151F38); border:1px solid rgba(237,235,227,.14); border-radius:16px; padding:13px 16px; box-shadow:0 24px 50px -22px rgba(0,0,0,.8); animation:fbfloat 5s ease-in-out infinite; text-align:left; min-width:212px;">
+      <div class="fb-signal-chip" style="position:absolute; right:-8px; bottom:-28px; z-index:3; background:linear-gradient(180deg,#1B2747,#151F38); border:1px solid rgba(237,235,227,.14); border-radius:16px; padding:13px 16px; box-shadow:0 24px 50px -22px rgba(0,0,0,.8); animation:fbfloat 5s ease-in-out infinite; text-align:left; min-width:212px;">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
           <span style="font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px;">XAU / USD</span>
           <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; padding:3px 9px; border-radius:999px; background:#1E3A30; color:#2E9E6B; text-transform:uppercase; letter-spacing:.06em;">Buy</span>
@@ -631,7 +631,7 @@
 
     <!-- CTA -->
     <div style="margin-top:54px; display:flex; flex-direction:column; align-items:center; gap:11px;">
-      <a href="{{ tgUrl }}" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:16px; padding:17px 32px; border-radius:999px; color:#fff; background:linear-gradient(165deg,#3AB4F2 0%,#1E8FD6 48%,#146EAF 100%); box-shadow:0 16px 34px -10px rgba(15,95,160,.6), inset 0 1px 0 rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.10);">
+      <a class="fb-cta-btn" href="{{ tgUrl }}" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:16px; padding:17px 32px; border-radius:999px; color:#fff; background:linear-gradient(165deg,#3AB4F2 0%,#1E8FD6 48%,#146EAF 100%); box-shadow:0 16px 34px -10px rgba(15,95,160,.6), inset 0 1px 0 rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.10);">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M21.5 3.5L2.7 10.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.7L22 4.6c.3-1.2-.4-1.7-1.5-1.1z" fill="#ffffff"></path></svg>
         Get 3 Months Free Access
       </a>
@@ -703,7 +703,7 @@
     <h2 style="font-family:'Fraunces',serif; font-weight:600; line-height:1.08; letter-spacing:-0.01em; font-size:clamp(26px,4.4vw,38px);">Real results from our<br>VIP community</h2>
 
     <!-- proof wall: video reviews + result screenshots -->
-    <div style="display:grid; gap:14px; margin-top:28px; grid-template-columns:repeat(auto-fit,minmax(172px,1fr));">
+    <div class="fb-proof-grid" style="display:grid; gap:14px; margin-top:28px; grid-template-columns:repeat(auto-fit,minmax(172px,1fr));">
       <div style="cursor:pointer; position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:linear-gradient(160deg,#243156,#0F1830); border:1px solid rgba(237,235,227,.18); display:flex; align-items:center; justify-content:center; box-shadow:0 34px 66px -34px rgba(0,0,0,.85);">
         <video id="fb-vr1" src="reviews/video-review-1.mp4" poster="reviews/video-poster-1.jpg" preload="none" playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
         <div class="fb-vr-overlay" style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(13,21,38,.30),rgba(13,21,38,.48) 52%,rgba(13,21,38,.92));"></div>
@@ -865,7 +865,7 @@
     <div style="display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#E6C368; margin-bottom:14px;"><span style="width:7px; height:7px; border-radius:50%; background:#E6C368; box-shadow:0 0 0 3px rgba(230,195,104,.18);"></span>Start today</div>
     <h2 style="font-family:'Fraunces',serif; font-weight:600; line-height:1.1; letter-spacing:-0.01em; font-size:clamp(26px,4.6vw,40px); max-width:640px; margin:0 auto;">Your 90-day journey to<br>professional trading starts here.</h2>
     <p style="max-width:540px; margin:16px auto 28px; color:rgba(243,241,233,.62); line-height:1.6;">Hum maante hain ki ye tumhari financial life badal sakta hai — isliye pehle prove karte hain, ek rupaya maangne se pehle. Agar 3 mahine mein result nahi dikhe, chale jao. Koi sawaal nahi.</p>
-    <a href="{{ tgUrl }}" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:16px; padding:17px 30px; border-radius:999px; color:#fff; background:linear-gradient(165deg,#3AB4F2 0%,#1E8FD6 48%,#146EAF 100%); box-shadow:0 14px 32px -8px rgba(15,95,160,.6), inset 0 1px 0 rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.10);">
+    <a class="fb-cta-btn" href="{{ tgUrl }}" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:16px; padding:17px 30px; border-radius:999px; color:#fff; background:linear-gradient(165deg,#3AB4F2 0%,#1E8FD6 48%,#146EAF 100%); box-shadow:0 14px 32px -8px rgba(15,95,160,.6), inset 0 1px 0 rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.10);">
       <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M21.5 3.5L2.7 10.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.7L22 4.6c.3-1.2-.4-1.7-1.5-1.1z" fill="#ffffff"></path></svg>
       Join Finance Bhai on Telegram — Free
     </a>
@@ -964,8 +964,24 @@ class Component extends DCLogic {
 <style>
 /* Mentor photo: compact crop so the image never dictates the section height */
 .fb-mentor-media { aspect-ratio: 1/1; max-height: 520px; }
+/* Big CTA buttons must never overflow their card */
+.fb-cta-btn { max-width: 100%; box-sizing: border-box; text-align: center; }
 @media (max-width: 700px) {
   .fb-mentor-media { aspect-ratio: 16/11; max-height: 300px; }
+  /* Floating signal chip overlaps the video and CTA on phones — dock it in flow */
+  .fb-signal-chip {
+    position: static !important;
+    margin: 16px auto 0 !important;
+    animation: none !important;
+    width: fit-content;
+  }
+  /* Odd tile in the proof grid: center it across both columns instead of leaving a hole */
+  .fb-proof-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 7px);
+  }
+  .fb-cta-btn { font-size: 15px !important; padding: 15px 20px !important; width: 100%; }
 }
 </style>
 <script>
@@ -977,6 +993,13 @@ function fbPlayReview(tile, v) {
   v.style.zIndex = 3;
   v.play();
   tile.style.cursor = 'default';
+  // On phones the inline player is tiny — open the native fullscreen player instead.
+  if (window.matchMedia('(max-width: 820px), (pointer: coarse)').matches) {
+    try {
+      if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+      else if (v.requestFullscreen) v.requestFullscreen();
+    } catch (err) { /* inline playback still works */ }
+  }
 }
 function fbOpenLightbox(src, alt) {
   var lb = document.getElementById('fb-lightbox');
