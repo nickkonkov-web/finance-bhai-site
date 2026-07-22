@@ -1035,20 +1035,103 @@ function fbOpenLightbox(src, alt) {
   img.alt = alt || '';
   lb.style.display = 'flex';
 }
+// Lead application form: opened by every Telegram CTA. Submissions go to Web3Forms,
+// then the visitor is redirected to thanks.html (where the Lead pixel fires).
+var FB_W3F_KEY = 'REPLACE_WITH_WEB3FORMS_KEY';
+var FB_TG_URL = 'https://t.me/financebhaitradealertsbot';
+function fbOpenLeadForm() {
+  var m = document.getElementById('fb-leadform');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'fb-leadform';
+    m.style.cssText = 'position:fixed; inset:0; z-index:9998; background:rgba(8,12,22,.9); display:flex; align-items:center; justify-content:center; padding:20px; overflow:auto;';
+    m.innerHTML =
+      '<div id="fb-leadcard" style="width:100%; max-width:420px; background:linear-gradient(180deg,#1B2747,#121C33); border:1px solid rgba(237,235,227,.16); border-radius:22px; padding:28px 24px; box-shadow:0 40px 90px -30px rgba(0,0,0,.9); position:relative;">' +
+        '<button id="fb-leadclose" aria-label="Close" style="position:absolute; top:12px; right:12px; width:36px; height:36px; border-radius:50%; border:1px solid rgba(237,235,227,.25); background:rgba(13,21,38,.7); color:#F3F1E9; font-size:16px; cursor:pointer;">✕</button>' +
+        '<div style="font-family:\'Fraunces\',serif; font-weight:600; font-size:24px; color:#F3F1E9;">Get your free access</div>' +
+        '<div style="margin-top:6px; font-size:13.5px; line-height:1.5; color:rgba(243,241,233,.65);">Fill this in — it takes 20 seconds. Phir seedha VIP group ka link milega.</div>' +
+        '<form id="fb-leadform-el" novalidate style="margin-top:18px; display:grid; gap:11px;">' +
+          fbLeadInput('first_name', 'First name', 'text') +
+          fbLeadInput('last_name', 'Last name', 'text') +
+          fbLeadInput('email', 'Email', 'email') +
+          fbLeadInput('phone', 'Phone (with country code)', 'tel') +
+          '<div id="fb-leaderr" style="display:none; font-size:12.5px; color:#E08578; line-height:1.4;"></div>' +
+          '<button id="fb-leadsubmit" type="submit" style="margin-top:4px; font-weight:700; font-size:15.5px; padding:15px 20px; border-radius:999px; border:none; cursor:pointer; color:#fff; background:linear-gradient(165deg,#3AB4F2 0%,#1E8FD6 48%,#146EAF 100%); box-shadow:0 14px 30px -10px rgba(15,95,160,.6);">Get 3 Months Free →</button>' +
+          '<div style="font-size:11px; line-height:1.45; color:rgba(243,241,233,.45); text-align:center;">By submitting, you agree to be contacted by Finance Bhai about your application. Trading involves significant risk.</div>' +
+        '</form>' +
+      '</div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (ev) { if (ev.target === m) m.style.display = 'none'; });
+    m.querySelector('#fb-leadclose').addEventListener('click', function () { m.style.display = 'none'; });
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') m.style.display = 'none'; });
+    m.querySelector('#fb-leadform-el').addEventListener('submit', fbSubmitLead);
+  }
+  m.style.display = 'flex';
+  var first = m.querySelector('input[name="first_name"]');
+  if (first) first.focus();
+}
+function fbLeadInput(name, label, type) {
+  return '<label style="display:grid; gap:5px; font-size:12px; letter-spacing:.02em; color:rgba(243,241,233,.6); text-align:left;">' + label +
+    '<input name="' + name + '" type="' + type + '" required style="font-size:15px; padding:12px 14px; border-radius:12px; border:1px solid rgba(237,235,227,.18); background:#0D1526; color:#F3F1E9; outline:none; width:100%; box-sizing:border-box;"></label>';
+}
+function fbSubmitLead(ev) {
+  ev.preventDefault();
+  var form = ev.target;
+  var err = form.querySelector('#fb-leaderr');
+  var btn = form.querySelector('#fb-leadsubmit');
+  var d = {};
+  ['first_name', 'last_name', 'email', 'phone'].forEach(function (n) { d[n] = (form.querySelector('[name="' + n + '"]').value || '').trim(); });
+  var problems = [];
+  if (!d.first_name || !d.last_name) problems.push('Please enter your first and last name.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) problems.push('Please enter a valid email.');
+  if (!/^\+?[0-9\s()-]{7,17}$/.test(d.phone)) problems.push('Please enter a valid phone number.');
+  if (problems.length) { err.style.display = 'block'; err.textContent = problems.join(' '); return; }
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  var done = function () { window.location.href = 'thanks.html'; };
+  if (FB_W3F_KEY.indexOf('REPLACE') === 0) { done(); return; }
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      access_key: FB_W3F_KEY,
+      subject: 'New Finance Bhai application',
+      from_name: 'financebhai.net',
+      first_name: d.first_name, last_name: d.last_name, email: d.email, phone: d.phone
+    })
+  }).then(function (r) { return r.json(); }).then(function (res) {
+    if (res.success) { done(); }
+    else { throw new Error(res.message || 'submit failed'); }
+  }).catch(function () {
+    btn.disabled = false;
+    btn.textContent = 'Get 3 Months Free →';
+    err.style.display = 'block';
+    err.innerHTML = 'Something went wrong. Please try again — or <a href="' + FB_TG_URL + '" style="color:#E6C368;">join on Telegram directly</a>.';
+  });
+}
 // The page framework re-renders the DOM and strips inline onclick attributes,
 // so bind by delegation and locate tiles through their video/img elements.
 document.addEventListener('click', function (e) {
   var el = e.target;
   if (el.closest && el.closest('#fb-lightbox')) return;
+  // Links inside the lead form (e.g. the direct-Telegram fallback) must navigate normally.
+  if (el.closest && el.closest('#fb-leadform')) {
+    var fa = el.closest('a[href]');
+    if (fa) { fa.target = '_blank'; fa.rel = 'noopener'; }
+    return;
+  }
   // External CTA links (Telegram) are framework-generated: force them into a new tab.
   var a = el.closest && el.closest('a[href]');
   if (a && /^https?:/.test(a.href) && a.host !== location.host) {
+    // Telegram CTAs open the application form; the Lead pixel fires on thanks.html only.
+    if (/(^|\.)t\.me$|telegram\.(me|org)$/.test(a.host)) {
+      e.preventDefault();
+      fbOpenLeadForm();
+      return;
+    }
     a.target = '_blank';
     a.rel = 'noopener';
-    // A click through to the Telegram bot is this page's conversion — report it as a Lead.
-    if (/(^|\.)t\.me$|telegram\.(me|org)$/.test(a.host) && typeof fbq === 'function') {
-      fbq('track', 'Lead');
-    }
     return;
   }
   while (el && el !== document.documentElement) {
